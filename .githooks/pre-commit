@@ -20,4 +20,18 @@ else
   echo "CSharpier: already formatted."
 fi
 
+# Enforce docs naming convention (lower-kebab-case for Markdown)
+echo "Checking docs naming (kebab-case)..."
+bad=""
+for f in $(git ls-files "*.md"); do
+  name=$(basename "$f")
+  # Allow conventional exceptions
+  echo "$name" | grep -Eq '^(README|DEVELOPING|CHANGELOG)\.md$|^[a-z0-9]+(-[a-z0-9]+)*\.md$' || bad="$bad\n$f"
+done
+if [ -n "$bad" ]; then
+  echo "Docs naming check failed. Use lower-kebab-case for Markdown files (except README.md, DEVELOPING.md). Offenders:" >&2
+  echo -e "$bad" >&2
+  exit 1
+fi
+
 exit 0

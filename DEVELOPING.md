@@ -42,6 +42,11 @@ Note: A pre-commit hook runs `csharpier` automatically.
 - Features: `feat: add X`
 - Fixes: `fix: correct Y`
 
+## 📚 Docs Naming
+- Markdown files should use lower-kebab-case (e.g., `no-code-quick-start.md`).
+- Conventional exceptions: `README.md`, `DEVELOPING.md`.
+- The pre-commit hook enforces this and will fail on offenders.
+
 ## 🧭 Useful Paths
 - Runtime code: `Runtime/`
 - Editor tools: `Editor/`
