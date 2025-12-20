@@ -5,8 +5,8 @@
 // Licensed under MIT License (see LICENSE file for details)
 // ============================================================================
 
-using UnityEngine;
 using PoolMaster;
+using UnityEngine;
 
 namespace PoolMaster.Examples
 {
@@ -17,10 +17,17 @@ namespace PoolMaster.Examples
     public class BasicPoolingDemo : MonoBehaviour
     {
         [Header("Configuration")]
-        [SerializeField] private float spawnInterval = 1f;
-        [SerializeField] private float despawnDelay = 3f;
-        [SerializeField] private int spawnHeight = 2;
-        [SerializeField] private float spawnRadius = 3f;
+        [SerializeField]
+        private float spawnInterval = 1f;
+
+        [SerializeField]
+        private float despawnDelay = 3f;
+
+        [SerializeField]
+        private int spawnHeight = 2;
+
+        [SerializeField]
+        private float spawnRadius = 3f;
 
         private float nextSpawnTime;
 
@@ -40,11 +47,13 @@ namespace PoolMaster.Examples
         {
             // Random position in a circle
             var angle = Random.Range(0f, Mathf.PI * 2f);
-            var position = transform.position + new Vector3(
-                Mathf.Cos(angle) * spawnRadius,
-                spawnHeight,
-                Mathf.Sin(angle) * spawnRadius
-            );
+            var position =
+                transform.position
+                + new Vector3(
+                    Mathf.Cos(angle) * spawnRadius,
+                    spawnHeight,
+                    Mathf.Sin(angle) * spawnRadius
+                );
 
             // Spawn from pool
             var obj = PoolingManager.Instance.Spawn(

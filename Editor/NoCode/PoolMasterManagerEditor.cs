@@ -26,7 +26,7 @@ namespace PoolMaster.NoCode.Editor
             prewarmOnStartProperty = serializedObject.FindProperty("prewarmOnStart");
             showWarningsProperty = serializedObject.FindProperty("showWarnings");
             showDebugInfoProperty = serializedObject.FindProperty("showDebugInfo");
-            
+
             // Auto-refresh runtime stats
             EditorApplication.update += OnEditorUpdate;
         }
@@ -50,7 +50,8 @@ namespace PoolMaster.NoCode.Editor
             serializedObject.Update();
 
             var manager = (PoolMasterManager)target;
-            if (manager == null) return;
+            if (manager == null)
+                return;
 
             // Consistent label width
             float originalLabelWidth = EditorGUIUtility.labelWidth;
@@ -66,12 +67,15 @@ namespace PoolMaster.NoCode.Editor
 
             // Pools section
             EditorGUILayout.LabelField("Pools", EditorStyles.boldLabel);
-            
+
             if (poolsProperty.arraySize == 0)
             {
-                EditorGUILayout.HelpBox("No pools configured. Click 'Add New Pool' below.", MessageType.Warning);
+                EditorGUILayout.HelpBox(
+                    "No pools configured. Click 'Add New Pool' below.",
+                    MessageType.Warning
+                );
             }
-            
+
             EditorGUILayout.PropertyField(poolsProperty, true);
 
             if (GUILayout.Button("Add New Pool", GUILayout.Height(30)))

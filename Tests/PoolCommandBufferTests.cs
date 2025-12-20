@@ -5,9 +5,9 @@
 // Licensed under MIT License (see LICENSE file for details)
 // ============================================================================
 
+using System.Collections.Concurrent;
 using NUnit.Framework;
 using UnityEngine;
-using System.Collections.Concurrent;
 
 namespace PoolMaster.Tests
 {
@@ -40,7 +40,7 @@ namespace PoolMaster.Tests
         public void EnqueueSpawn_IncreasesPendingCount()
         {
             buffer.EnqueueSpawn(Vector3.zero, Quaternion.identity);
-            
+
             Assert.AreEqual(1, buffer.PendingSpawnCount);
             Assert.IsTrue(buffer.HasPendingOperations);
         }
@@ -50,10 +50,10 @@ namespace PoolMaster.Tests
         {
             var obj = new GameObject("Test");
             buffer.EnqueueReturn(obj);
-            
+
             Assert.AreEqual(1, buffer.PendingReturnCount);
             Assert.IsTrue(buffer.HasPendingOperations);
-            
+
             Object.DestroyImmediate(obj);
         }
 
@@ -62,9 +62,9 @@ namespace PoolMaster.Tests
         {
             var positions = new Vector3[] { Vector3.zero, Vector3.one };
             var rotations = new Quaternion[] { Quaternion.identity, Quaternion.identity };
-            
+
             buffer.EnqueueSpawnBatch(positions, rotations);
-            
+
             Assert.AreEqual(1, buffer.PendingBatchCount);
             Assert.IsTrue(buffer.HasPendingOperations);
         }
@@ -73,7 +73,7 @@ namespace PoolMaster.Tests
         public void EnqueueSpawnBatch_NullPositions_DoesNotEnqueue()
         {
             buffer.EnqueueSpawnBatch(null, null);
-            
+
             Assert.AreEqual(0, buffer.PendingBatchCount);
             Assert.IsFalse(buffer.HasPendingOperations);
         }
@@ -82,7 +82,7 @@ namespace PoolMaster.Tests
         public void EnqueueSpawnBatch_EmptyPositions_DoesNotEnqueue()
         {
             buffer.EnqueueSpawnBatch(new Vector3[0], new Quaternion[0]);
-            
+
             Assert.AreEqual(0, buffer.PendingBatchCount);
             Assert.IsFalse(buffer.HasPendingOperations);
         }
@@ -91,7 +91,7 @@ namespace PoolMaster.Tests
         public void EnqueueReturn_NullObject_DoesNotEnqueue()
         {
             buffer.EnqueueReturn(null);
-            
+
             Assert.AreEqual(0, buffer.PendingReturnCount);
         }
 
@@ -137,9 +137,9 @@ namespace PoolMaster.Tests
         {
             buffer.EnqueueSpawn(Vector3.zero, Quaternion.identity);
             buffer.EnqueueSpawn(Vector3.one, Quaternion.identity);
-            
+
             int processed = buffer.FlushTo(fakePool);
-            
+
             Assert.AreEqual(2, processed);
             Assert.AreEqual(2, fakePool.SpawnCallCount);
             Assert.AreEqual(0, buffer.PendingSpawnCount);
@@ -150,16 +150,16 @@ namespace PoolMaster.Tests
         {
             var obj1 = new GameObject();
             var obj2 = new GameObject();
-            
+
             buffer.EnqueueReturn(obj1);
             buffer.EnqueueReturn(obj2);
-            
+
             int processed = buffer.FlushTo(fakePool);
-            
+
             Assert.AreEqual(2, processed);
             Assert.AreEqual(2, fakePool.DespawnCallCount);
             Assert.AreEqual(0, buffer.PendingReturnCount);
-            
+
             Object.DestroyImmediate(obj1);
             Object.DestroyImmediate(obj2);
         }
@@ -168,11 +168,11 @@ namespace PoolMaster.Tests
         public void FlushTo_ProcessesBatchCommands()
         {
             var positions = new Vector3[] { Vector3.zero, Vector3.one, Vector3.up };
-            
+
             buffer.EnqueueSpawnBatch(positions, null);
-            
+
             int processed = buffer.FlushTo(fakePool);
-            
+
             Assert.AreEqual(3, processed); // Batch returned 3
             // SpawnBatch is an extension method that calls Spawn() internally
             Assert.AreEqual(3, fakePool.SpawnCallCount); // 3 Spawn() calls from extension method
@@ -186,15 +186,15 @@ namespace PoolMaster.Tests
             var obj = new GameObject();
             buffer.EnqueueReturn(obj);
             buffer.EnqueueSpawn(Vector3.zero, Quaternion.identity);
-            
+
             buffer.FlushTo(fakePool);
-            
+
             // Check order: despawn called before spawn
             Assert.AreEqual(1, fakePool.DespawnCallCount);
             Assert.AreEqual(1, fakePool.SpawnCallCount);
             Assert.That(fakePool.CallOrder[0], Does.Contain("Despawn"));
             Assert.That(fakePool.CallOrder[1], Does.Contain("Spawn"));
-            
+
             Object.DestroyImmediate(obj);
         }
 
@@ -202,9 +202,9 @@ namespace PoolMaster.Tests
         public void FlushTo_NullPool_ReturnsZero()
         {
             buffer.EnqueueSpawn(Vector3.zero, Quaternion.identity);
-            
+
             int processed = buffer.FlushTo(null);
-            
+
             Assert.AreEqual(0, processed);
         }
 
@@ -215,14 +215,14 @@ namespace PoolMaster.Tests
             buffer.EnqueueSpawn(Vector3.zero, Quaternion.identity);
             buffer.EnqueueReturn(obj);
             buffer.EnqueueSpawnBatch(new[] { Vector3.zero }, null);
-            
+
             buffer.Clear();
-            
+
             Assert.IsFalse(buffer.HasPendingOperations);
             Assert.AreEqual(0, buffer.PendingSpawnCount);
             Assert.AreEqual(0, buffer.PendingReturnCount);
             Assert.AreEqual(0, buffer.PendingBatchCount);
-            
+
             Object.DestroyImmediate(obj);
         }
 
@@ -231,14 +231,14 @@ namespace PoolMaster.Tests
         {
             buffer.EnqueueSpawn(Vector3.zero, Quaternion.identity);
             buffer.EnqueueSpawn(Vector3.one, Quaternion.identity);
-            
+
             var obj = new GameObject();
             buffer.EnqueueReturn(obj);
-            
+
             buffer.EnqueueSpawnBatch(new[] { Vector3.zero }, null);
-            
+
             Assert.AreEqual(4, buffer.TotalPendingCount); // 2 spawns + 1 return + 1 batch
-            
+
             Object.DestroyImmediate(obj);
         }
 
@@ -252,12 +252,12 @@ namespace PoolMaster.Tests
             var obj = new GameObject("TestToString");
             buffer.EnqueueSpawn(Vector3.zero, Quaternion.identity);
             buffer.EnqueueReturn(obj);
-            
+
             var str = buffer.ToString();
-            
+
             Assert.That(str, Does.Contain("Spawns:"));
             Assert.That(str, Does.Contain("Returns:"));
-            
+
             Object.DestroyImmediate(obj);
         }
 
@@ -272,8 +272,10 @@ namespace PoolMaster.Tests
         public int SpawnCallCount { get; private set; }
         public int DespawnCallCount { get; private set; }
         public int BatchSpawnCallCount { get; private set; }
-        public System.Collections.Generic.List<string> CallOrder { get; } = new System.Collections.Generic.List<string>();
-        private System.Collections.Generic.List<GameObject> spawnedObjects = new System.Collections.Generic.List<GameObject>();
+        public System.Collections.Generic.List<string> CallOrder { get; } =
+            new System.Collections.Generic.List<string>();
+        private System.Collections.Generic.List<GameObject> spawnedObjects =
+            new System.Collections.Generic.List<GameObject>();
 
         public GameObject Spawn()
         {
@@ -328,6 +330,7 @@ namespace PoolMaster.Tests
 
         // IPool interface
         public void ReturnToPool(GameObject obj) => Despawn(obj);
+
         public GameObject Prefab => null;
         public string PoolId => "FakePool";
         public int ActiveCount => 0;
@@ -337,14 +340,44 @@ namespace PoolMaster.Tests
         // IPoolControl interface
         public int TotalCount => 0;
         public PoolMetrics Metrics => default;
-        public bool TrySpawn(out GameObject instance) { instance = Spawn(); return true; }
-        public bool TrySpawn(Vector3 position, out GameObject instance) { instance = Spawn(position); return true; }
-        public bool TrySpawn(Vector3 position, Quaternion rotation, out GameObject instance) { instance = Spawn(position, rotation); return true; }
-        public bool TrySpawn(Vector3 position, Quaternion rotation, Transform parent, out GameObject instance) { instance = Spawn(position, rotation, parent); return true; }
+
+        public bool TrySpawn(out GameObject instance)
+        {
+            instance = Spawn();
+            return true;
+        }
+
+        public bool TrySpawn(Vector3 position, out GameObject instance)
+        {
+            instance = Spawn(position);
+            return true;
+        }
+
+        public bool TrySpawn(Vector3 position, Quaternion rotation, out GameObject instance)
+        {
+            instance = Spawn(position, rotation);
+            return true;
+        }
+
+        public bool TrySpawn(
+            Vector3 position,
+            Quaternion rotation,
+            Transform parent,
+            out GameObject instance
+        )
+        {
+            instance = Spawn(position, rotation, parent);
+            return true;
+        }
+
         public void PrewarmPool(int count) { }
+
         public void Clear() { }
+
         public void ShrinkInactive(int targetInactive = 0) { }
+
         public void DestroyPool() { }
+
         public bool ContainsObject(GameObject instance) => false;
 
         public void DestroySpawnedObjects()

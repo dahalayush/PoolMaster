@@ -5,9 +5,9 @@
 // Licensed under MIT License (see LICENSE file for details)
 // ============================================================================
 
-using UnityEngine;
-using PoolMaster;
 using System.Threading.Tasks;
+using PoolMaster;
+using UnityEngine;
 
 namespace PoolMaster.Examples
 {
@@ -18,10 +18,17 @@ namespace PoolMaster.Examples
     public class CommandBufferDemo : MonoBehaviour
     {
         [Header("Configuration")]
-        [SerializeField] private float computeInterval = 1.5f;
-        [SerializeField] private int computeIterations = 1000;
-        [SerializeField] private int objectsToSpawn = 5;
-        [SerializeField] private float spawnRadius = 2f;
+        [SerializeField]
+        private float computeInterval = 1.5f;
+
+        [SerializeField]
+        private int computeIterations = 1000;
+
+        [SerializeField]
+        private int objectsToSpawn = 5;
+
+        [SerializeField]
+        private float spawnRadius = 2f;
 
         private PoolCommandBuffer commandBuffer;
         private float nextComputeTime;
@@ -90,10 +97,7 @@ namespace PoolMaster.Examples
             // Enqueue spawn commands from worker thread (thread-safe)
             for (int i = 0; i < positions.Length; i++)
             {
-                commandBuffer.EnqueueSpawn(
-                    positions[i],
-                    Quaternion.identity
-                );
+                commandBuffer.EnqueueSpawn(positions[i], Quaternion.identity);
             }
         }
 
@@ -101,7 +105,7 @@ namespace PoolMaster.Examples
         {
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, spawnRadius);
-            
+
             if (isComputing)
             {
                 Gizmos.color = Color.red;

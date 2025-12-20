@@ -130,7 +130,9 @@ namespace PoolMaster
             // Ensure valid size constraints
             if (initialSize < 0)
             {
-                Debug.LogWarning($"PoolRequest.Create: initialSize ({initialSize}) cannot be negative, setting to 0");
+                Debug.LogWarning(
+                    $"PoolRequest.Create: initialSize ({initialSize}) cannot be negative, setting to 0"
+                );
                 initialSize = 0;
             }
 
@@ -169,10 +171,12 @@ namespace PoolMaster
             // Validate size constraints
             if (maxSize > 0 && initialSize > maxSize)
             {
-                Debug.LogWarning($"PoolRequest.CreateHighPerformance: initialSize ({initialSize}) exceeds maxPoolSize ({maxSize}), clamping to maxSize");
+                Debug.LogWarning(
+                    $"PoolRequest.CreateHighPerformance: initialSize ({initialSize}) exceeds maxPoolSize ({maxSize}), clamping to maxSize"
+                );
                 initialSize = maxSize;
             }
-            
+
             var request = Create(prefab, initialSize, true);
             request.maxPoolSize = maxSize;
             request.initializationTiming = PoolInitializationTiming.OnAwake;

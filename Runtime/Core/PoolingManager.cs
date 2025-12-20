@@ -707,7 +707,9 @@ namespace PoolMaster
         {
             if (inactiveDurationSeconds <= 0)
             {
-                PoolLog.Warn("PoolingManager.CullUnusedPools: inactiveDurationSeconds must be positive");
+                PoolLog.Warn(
+                    "PoolingManager.CullUnusedPools: inactiveDurationSeconds must be positive"
+                );
                 return 0;
             }
 
@@ -722,7 +724,7 @@ namespace PoolMaster
                 if (pool is IPoolControl ctrl)
                 {
                     var metrics = ctrl.Metrics;
-                    
+
                     // Check if pool has been inactive (no spawns/despawns) for the specified duration
                     // Use LastActivityTime which tracks spawn, despawn, expansion, and cull operations
                     float inactiveDuration = currentTime - metrics.LastActivityTime;
@@ -747,7 +749,9 @@ namespace PoolMaster
 
             if (culledCount > 0)
             {
-                PoolLog.Info($"PoolingManager: Culled {culledCount} unused pools (inactive > {inactiveDurationSeconds}s)");
+                PoolLog.Info(
+                    $"PoolingManager: Culled {culledCount} unused pools (inactive > {inactiveDurationSeconds}s)"
+                );
             }
 
             return culledCount;

@@ -5,8 +5,8 @@
 // Licensed under MIT License (see LICENSE file for details)
 // ============================================================================
 
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace PoolMaster.NoCode
 {
@@ -50,19 +50,23 @@ namespace PoolMaster.NoCode
 
         public void Initialize(Transform managerTransform, bool debugMode)
         {
-            if (isInitialized) return;
+            if (isInitialized)
+                return;
 
             showDebug = debugMode;
             parent = DefaultParent != null ? DefaultParent : managerTransform;
             isInitialized = true;
 
             if (showDebug)
-                Debug.Log($"[PoolMaster] Initialized pool for '{Prefab?.name}' (Prewarm: {PrewarmAmount}, Max: {MaxSize})");
+                Debug.Log(
+                    $"[PoolMaster] Initialized pool for '{Prefab?.name}' (Prewarm: {PrewarmAmount}, Max: {MaxSize})"
+                );
         }
 
         public void Prewarm()
         {
-            if (!isInitialized || Prefab == null) return;
+            if (!isInitialized || Prefab == null)
+                return;
 
             for (int i = 0; i < PrewarmAmount; i++)
             {
@@ -75,7 +79,8 @@ namespace PoolMaster.NoCode
 
         public GameObject Spawn(Vector3 position, Quaternion rotation)
         {
-            if (!isInitialized || Prefab == null) return null;
+            if (!isInitialized || Prefab == null)
+                return null;
 
             GameObject obj = null;
 
@@ -83,7 +88,8 @@ namespace PoolMaster.NoCode
             while (inactiveObjects.Count > 0)
             {
                 obj = inactiveObjects.Pop();
-                if (obj != null) break;
+                if (obj != null)
+                    break;
             }
 
             // Create new if needed
@@ -115,7 +121,8 @@ namespace PoolMaster.NoCode
 
         public void ReturnToPool(GameObject obj)
         {
-            if (obj == null || !activeObjects.Remove(obj)) return;
+            if (obj == null || !activeObjects.Remove(obj))
+                return;
 
             obj.SetActive(false);
             obj.transform.SetParent(parent);
@@ -127,21 +134,24 @@ namespace PoolMaster.NoCode
 
         public bool ContainsInstance(GameObject obj)
         {
-            if (obj == null) return false;
-            
+            if (obj == null)
+                return false;
+
             // Check active list
             for (int i = 0; i < activeObjects.Count; i++)
             {
-                if (activeObjects[i] == obj) return true;
+                if (activeObjects[i] == obj)
+                    return true;
             }
-            
+
             // Check inactive stack (rare case)
             return inactiveObjects.Contains(obj);
         }
 
         private GameObject CreateNewInstance()
         {
-            if (Prefab == null) return null;
+            if (Prefab == null)
+                return null;
 
             GameObject obj = Object.Instantiate(Prefab, parent);
             obj.SetActive(false);
@@ -177,11 +187,15 @@ namespace PoolMaster.NoCode
 
                 case ExhaustedBehavior.ReturnNull:
                     if (showDebug)
-                        Debug.LogWarning($"[PoolMaster] Pool '{Prefab.name}' exhausted. Returning null.");
+                        Debug.LogWarning(
+                            $"[PoolMaster] Pool '{Prefab.name}' exhausted. Returning null."
+                        );
                     return null;
 
                 case ExhaustedBehavior.Warn:
-                    Debug.LogWarning($"[PoolMaster] Pool '{Prefab.name}' is at Max Size ({MaxSize}). Consider increasing it or changing 'On Exhausted' behavior.");
+                    Debug.LogWarning(
+                        $"[PoolMaster] Pool '{Prefab.name}' is at Max Size ({MaxSize}). Consider increasing it or changing 'On Exhausted' behavior."
+                    );
                     return CreateNewInstance();
             }
 
@@ -204,6 +218,6 @@ namespace PoolMaster.NoCode
         ReturnNull,
 
         [Tooltip("Create more objects but show a warning (for debugging).")]
-        Warn
+        Warn,
     }
 }

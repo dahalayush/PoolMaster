@@ -211,7 +211,8 @@ namespace PoolMaster.NoCode
 
         private void EnsureComponentsCached()
         {
-            if (componentsChecked) return;
+            if (componentsChecked)
+                return;
 
             particleSystems = GetComponentsInChildren<ParticleSystem>();
             rb = GetComponent<Rigidbody>();
@@ -239,6 +240,6 @@ namespace PoolMaster.NoCode
         OnTriggerExit,
 
         [Tooltip("Return when colliding with something.")]
-        OnCollision
+        OnCollision,
     }
 }

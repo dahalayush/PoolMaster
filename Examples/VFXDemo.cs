@@ -5,8 +5,8 @@
 // Licensed under MIT License (see LICENSE file for details)
 // ============================================================================
 
-using UnityEngine;
 using PoolMaster;
+using UnityEngine;
 
 namespace PoolMaster.Examples
 {
@@ -17,10 +17,17 @@ namespace PoolMaster.Examples
     public class VFXDemo : MonoBehaviour
     {
         [Header("Configuration")]
-        [SerializeField] private float spawnInterval = 0.8f;
-        [SerializeField] private float vfxDuration = 1.5f;
-        [SerializeField] private float expansionSpeed = 2f;
-        [SerializeField] private float spawnRadius = 3f;
+        [SerializeField]
+        private float spawnInterval = 0.8f;
+
+        [SerializeField]
+        private float vfxDuration = 1.5f;
+
+        [SerializeField]
+        private float expansionSpeed = 2f;
+
+        [SerializeField]
+        private float spawnRadius = 3f;
 
         private float nextSpawnTime;
 
@@ -62,7 +69,7 @@ namespace PoolMaster.Examples
             var endScale = Vector3.one * expansionSpeed;
             var renderer = vfx.GetComponent<Renderer>();
             var startColor = renderer.material.color;
-            
+
             float elapsed = 0f;
 
             while (elapsed < duration)
@@ -93,7 +100,7 @@ namespace PoolMaster.Examples
                 {
                     renderer.material.color = startColor;
                 }
-                
+
                 PoolingManager.Instance.Despawn(vfx);
             }
         }

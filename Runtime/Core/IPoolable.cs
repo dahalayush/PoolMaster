@@ -88,6 +88,7 @@ namespace PoolMaster
         /// </summary>
         int Capacity { get; }
     }
+
     /// <summary>
     /// Internal pool operations not exposed through public API.
     /// Used for communication between PooledMarker and Pool for lifecycle management.
@@ -100,4 +101,5 @@ namespace PoolMaster
         /// </summary>
         /// <param name="instance">The destroyed GameObject instance.</param>
         void NotifyObjectDestroyed(GameObject instance);
-    }}
+    }
+}

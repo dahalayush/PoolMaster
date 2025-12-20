@@ -16,8 +16,10 @@ namespace PoolMaster.Examples
     public class DemoMetadata
     {
         public string title;
+
         [TextArea(2, 4)]
         public string description;
+
         [TextArea(3, 6)]
         public string features;
         public MonoBehaviour demoComponent;

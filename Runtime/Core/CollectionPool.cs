@@ -17,14 +17,15 @@ namespace PoolMaster
     public static class CollectionPool
     {
         // Per-type pools to prevent type mixing bugs
-        private static readonly Dictionary<Type, object> typedPools = new Dictionary<Type, object>();
+        private static readonly Dictionary<Type, object> typedPools =
+            new Dictionary<Type, object>();
         private static readonly object poolLock = new object();
         private static int totalPooledCount = 0; // Fast counter without reflection
-        
+
         private const int MaxPoolSize = 16; // Prevent unbounded growth
-        
+
         // ==================== List<T> Pooling ====================
-        
+
         /// <summary>
         /// Gets a cleared List from the pool or creates a new one. Must call Return() when done to prevent leaks.
         /// </summary>
@@ -37,7 +38,7 @@ namespace PoolMaster
                 {
                     return new List<T>();
                 }
-                
+
                 var pool = (Stack<List<T>>)poolObj;
                 if (pool.Count > 0)
                 {
@@ -49,16 +50,17 @@ namespace PoolMaster
             }
             return new List<T>();
         }
-        
+
         /// <summary>
         /// Returns a List to the pool. The list is automatically cleared.
         /// </summary>
         public static void Return<T>(List<T> list)
         {
-            if (list == null) return;
-            
+            if (list == null)
+                return;
+
             list.Clear(); // Clear before pooling to release references
-            
+
             lock (poolLock)
             {
                 var type = typeof(List<T>);
@@ -67,7 +69,7 @@ namespace PoolMaster
                     poolObj = new Stack<List<T>>();
                     typedPools[type] = poolObj;
                 }
-                
+
                 var pool = (Stack<List<T>>)poolObj;
                 if (pool.Count < MaxPoolSize)
                 {
@@ -76,9 +78,9 @@ namespace PoolMaster
                 }
             }
         }
-        
+
         // ==================== HashSet<T> Pooling ====================
-        
+
         /// <summary>
         /// Gets a cleared HashSet from the pool or creates a new one. Must call Return() when done to prevent leaks.
         /// </summary>
@@ -91,7 +93,7 @@ namespace PoolMaster
                 {
                     return new HashSet<T>();
                 }
-                
+
                 var pool = (Stack<HashSet<T>>)poolObj;
                 if (pool.Count > 0)
                 {
@@ -103,16 +105,17 @@ namespace PoolMaster
             }
             return new HashSet<T>();
         }
-        
+
         /// <summary>
         /// Returns a HashSet to the pool. The set is automatically cleared.
         /// </summary>
         public static void Return<T>(HashSet<T> set)
         {
-            if (set == null) return;
-            
+            if (set == null)
+                return;
+
             set.Clear();
-            
+
             lock (poolLock)
             {
                 var type = typeof(HashSet<T>);
@@ -121,7 +124,7 @@ namespace PoolMaster
                     poolObj = new Stack<HashSet<T>>();
                     typedPools[type] = poolObj;
                 }
-                
+
                 var pool = (Stack<HashSet<T>>)poolObj;
                 if (pool.Count < MaxPoolSize)
                 {
@@ -130,9 +133,9 @@ namespace PoolMaster
                 }
             }
         }
-        
+
         // ==================== Dictionary<TKey, TValue> Pooling ====================
-        
+
         /// <summary>
         /// Gets a cleared Dictionary from the pool or creates a new one. Must call Return() when done to prevent leaks.
         /// </summary>
@@ -145,7 +148,7 @@ namespace PoolMaster
                 {
                     return new Dictionary<TKey, TValue>();
                 }
-                
+
                 var pool = (Stack<Dictionary<TKey, TValue>>)poolObj;
                 if (pool.Count > 0)
                 {
@@ -157,16 +160,17 @@ namespace PoolMaster
             }
             return new Dictionary<TKey, TValue>();
         }
-        
+
         /// <summary>
         /// Returns a Dictionary to the pool. The dictionary is automatically cleared.
         /// </summary>
         public static void Return<TKey, TValue>(Dictionary<TKey, TValue> dict)
         {
-            if (dict == null) return;
-            
+            if (dict == null)
+                return;
+
             dict.Clear();
-            
+
             lock (poolLock)
             {
                 var type = typeof(Dictionary<TKey, TValue>);
@@ -175,7 +179,7 @@ namespace PoolMaster
                     poolObj = new Stack<Dictionary<TKey, TValue>>();
                     typedPools[type] = poolObj;
                 }
-                
+
                 var pool = (Stack<Dictionary<TKey, TValue>>)poolObj;
                 if (pool.Count < MaxPoolSize)
                 {
@@ -184,9 +188,9 @@ namespace PoolMaster
                 }
             }
         }
-        
+
         // ==================== Diagnostics ====================
-        
+
         /// <summary>
         /// Get total number of pooled collections for debugging/monitoring. O(1) operation using fast counter.
         /// </summary>
@@ -197,7 +201,7 @@ namespace PoolMaster
                 return totalPooledCount;
             }
         }
-        
+
         /// <summary>
         /// Clear all pools (useful for scene transitions or testing).
         /// </summary>

@@ -16,7 +16,7 @@ namespace PoolMaster.Examples
     {
         private float deltaTime = 0.0f;
         private GUIStyle style;
-        
+
         void Update()
         {
             deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
@@ -32,13 +32,14 @@ namespace PoolMaster.Examples
                 style.normal.textColor = Color.white;
             }
 
-            int w = Screen.width, h = Screen.height;
+            int w = Screen.width,
+                h = Screen.height;
             Rect rect = new Rect(10, 10, w, h * 2 / 100);
-            
+
             float msec = deltaTime * 1000.0f;
             float fps = 1.0f / deltaTime;
             string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);
-            
+
             // Color code based on FPS
             if (fps >= 60)
                 style.normal.textColor = Color.green;
@@ -48,7 +49,7 @@ namespace PoolMaster.Examples
                 style.normal.textColor = Color.red;
 
             GUI.Label(rect, text, style);
-            
+
             // Show active objects count
             rect.y += 25;
             style.fontSize = 14;

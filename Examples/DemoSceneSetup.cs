@@ -5,8 +5,8 @@
 // Licensed under MIT License (see LICENSE file for details)
 // ============================================================================
 
-using UnityEngine;
 using PoolMaster;
+using UnityEngine;
 
 namespace PoolMaster.Examples
 {
@@ -21,10 +21,17 @@ namespace PoolMaster.Examples
         public Material sharedMaterial;
 
         [Header("Pool Configuration")]
-        [SerializeField] private int basicPoolSize = 20;
-        [SerializeField] private int projectilePoolSize = 50;
-        [SerializeField] private int vfxPoolSize = 30;
-        [SerializeField] private int particlePoolSize = 100;
+        [SerializeField]
+        private int basicPoolSize = 20;
+
+        [SerializeField]
+        private int projectilePoolSize = 50;
+
+        [SerializeField]
+        private int vfxPoolSize = 30;
+
+        [SerializeField]
+        private int particlePoolSize = 100;
 
         // Public references for demo scripts
         public static GameObject BasicSpherePrefab { get; private set; }
@@ -51,7 +58,7 @@ namespace PoolMaster.Examples
 
             // VFX - yellow, glowing
             VFXPrefab = CreateSpherePrefab("VFX", Color.yellow, 0.4f);
-            
+
             // Particle - white, tiny
             ParticlePrefab = CreateSpherePrefab("Particle", Color.white, 0.15f);
 
@@ -73,7 +80,8 @@ namespace PoolMaster.Examples
 
             // REMOVE COLLIDER - not needed for demo, causes physics overhead
             var collider = sphere.GetComponent<Collider>();
-            if (collider != null) Object.DestroyImmediate(collider);
+            if (collider != null)
+                Object.DestroyImmediate(collider);
 
             // Apply color using SHARED material (no allocations!)
             var renderer = sphere.GetComponent<Renderer>();
@@ -81,7 +89,7 @@ namespace PoolMaster.Examples
             {
                 sharedMaterial = new Material(Shader.Find("Standard"));
             }
-            
+
             // Create one material per color and reuse it
             var material = new Material(sharedMaterial);
             material.color = color;
@@ -110,7 +118,7 @@ namespace PoolMaster.Examples
 
             // Projectile pool - high performance, pre-warmed
             var projectileRequest = PoolRequest.CreateHighPerformance(
-                ProjectilePrefab, 
+                ProjectilePrefab,
                 initialSize: projectilePoolSize,
                 maxSize: 100
             );
@@ -131,10 +139,14 @@ namespace PoolMaster.Examples
         void OnDestroy()
         {
             // Cleanup prefabs
-            if (BasicSpherePrefab != null) Destroy(BasicSpherePrefab);
-            if (ProjectilePrefab != null) Destroy(ProjectilePrefab);
-            if (VFXPrefab != null) Destroy(VFXPrefab);
-            if (ParticlePrefab != null) Destroy(ParticlePrefab);
+            if (BasicSpherePrefab != null)
+                Destroy(BasicSpherePrefab);
+            if (ProjectilePrefab != null)
+                Destroy(ProjectilePrefab);
+            if (VFXPrefab != null)
+                Destroy(VFXPrefab);
+            if (ParticlePrefab != null)
+                Destroy(ParticlePrefab);
         }
     }
 }

@@ -138,7 +138,8 @@ namespace PoolMaster
 
             // Cache particle systems (use Array.Empty if none exist for zero allocation)
             var particleArray = GetComponentsInChildren<ParticleSystem>();
-            particles = particleArray.Length > 0 ? particleArray : System.Array.Empty<ParticleSystem>();
+            particles =
+                particleArray.Length > 0 ? particleArray : System.Array.Empty<ParticleSystem>();
 
             // Cache rigidbody (3D or 2D, whichever exists)
             rb = GetComponent<Rigidbody>();

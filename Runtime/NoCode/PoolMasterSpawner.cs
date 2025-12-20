@@ -17,7 +17,9 @@ namespace PoolMaster.NoCode
     public class PoolMasterSpawner : MonoBehaviour
     {
         [Header("What to Spawn")]
-        [Tooltip("The prefab to spawn from the pool. Make sure this prefab is added to PoolMaster Manager's pool list.")]
+        [Tooltip(
+            "The prefab to spawn from the pool. Make sure this prefab is added to PoolMaster Manager's pool list."
+        )]
         [SerializeField]
         private GameObject prefabToSpawn;
 
@@ -157,7 +159,10 @@ namespace PoolMaster.NoCode
 
             if (PoolMasterManager.Instance == null)
             {
-                Debug.LogWarning("[PoolMaster Spawner] No PoolMaster Manager found in scene.", this);
+                Debug.LogWarning(
+                    "[PoolMaster Spawner] No PoolMaster Manager found in scene.",
+                    this
+                );
                 return;
             }
 
@@ -166,7 +171,11 @@ namespace PoolMaster.NoCode
                 Vector3 position = GetSpawnPosition();
                 Quaternion rotation = GetSpawnRotation();
 
-                GameObject spawned = PoolMasterManager.Instance.Spawn(prefabToSpawn, position, rotation);
+                GameObject spawned = PoolMasterManager.Instance.Spawn(
+                    prefabToSpawn,
+                    position,
+                    rotation
+                );
 
                 if (spawned != null && spawnParent != null)
                 {
@@ -203,11 +212,13 @@ namespace PoolMaster.NoCode
                     break;
 
                 case SpawnPositionMode.RandomInArea:
-                    basePosition = transform.position + new Vector3(
-                        Random.Range(-randomAreaSize.x / 2, randomAreaSize.x / 2),
-                        Random.Range(-randomAreaSize.y / 2, randomAreaSize.y / 2),
-                        Random.Range(-randomAreaSize.z / 2, randomAreaSize.z / 2)
-                    );
+                    basePosition =
+                        transform.position
+                        + new Vector3(
+                            Random.Range(-randomAreaSize.x / 2, randomAreaSize.x / 2),
+                            Random.Range(-randomAreaSize.y / 2, randomAreaSize.y / 2),
+                            Random.Range(-randomAreaSize.z / 2, randomAreaSize.z / 2)
+                        );
                     break;
             }
 
@@ -245,12 +256,17 @@ namespace PoolMaster.NoCode
         // Gizmo to show spawn area
         void OnDrawGizmosSelected()
         {
-            if (!enabled) return;
-            
+            if (!enabled)
+                return;
+
             if (positionMode == SpawnPositionMode.RandomInArea)
             {
                 Gizmos.color = new Color(0, 1, 0, 0.3f);
-                Gizmos.matrix = Matrix4x4.TRS(transform.position + spawnOffset, Quaternion.identity, Vector3.one);
+                Gizmos.matrix = Matrix4x4.TRS(
+                    transform.position + spawnOffset,
+                    Quaternion.identity,
+                    Vector3.one
+                );
                 Gizmos.DrawCube(Vector3.zero, randomAreaSize);
                 Gizmos.color = Color.green;
                 Gizmos.DrawWireCube(Vector3.zero, randomAreaSize);
@@ -258,9 +274,10 @@ namespace PoolMaster.NoCode
             else if (spawnTarget != null || positionMode == SpawnPositionMode.AtThisObject)
             {
                 Gizmos.color = Color.cyan;
-                Vector3 pos = positionMode == SpawnPositionMode.AtTarget && spawnTarget != null 
-                    ? spawnTarget.position + spawnOffset
-                    : transform.position + spawnOffset;
+                Vector3 pos =
+                    positionMode == SpawnPositionMode.AtTarget && spawnTarget != null
+                        ? spawnTarget.position + spawnOffset
+                        : transform.position + spawnOffset;
                 Gizmos.DrawWireSphere(pos, 0.3f);
             }
         }
@@ -275,7 +292,7 @@ namespace PoolMaster.NoCode
         AtTarget,
 
         [Tooltip("Spawn at a random position within an area.")]
-        RandomInArea
+        RandomInArea,
     }
 
     public enum SpawnRotationMode
@@ -293,7 +310,7 @@ namespace PoolMaster.NoCode
         Custom,
 
         [Tooltip("Random rotation on all axes.")]
-        Random
+        Random,
     }
 
     public enum SpawnTrigger
@@ -314,6 +331,6 @@ namespace PoolMaster.NoCode
         OnCollision,
 
         [Tooltip("Spawn when a key is pressed.")]
-        OnKeyPress
+        OnKeyPress,
     }
 }

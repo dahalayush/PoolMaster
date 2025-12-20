@@ -5,8 +5,8 @@
 // Licensed under MIT License (see LICENSE file for details)
 // ============================================================================
 
-using UnityEngine;
 using PoolMaster;
+using UnityEngine;
 
 namespace PoolMaster.Examples
 {
@@ -17,15 +17,30 @@ namespace PoolMaster.Examples
     public class ProjectileDemo : MonoBehaviour
     {
         [Header("Configuration")]
-        [SerializeField] private float fireRate = 0.2f;
-        [SerializeField] private float projectileSpeed = 10f;
-        [SerializeField] private float projectileLifetime = 2f;
-        [SerializeField] private int projectileCount = 3;
-        [SerializeField] private float spreadAngle = 15f;
+        [SerializeField]
+        private float fireRate = 0.2f;
+
+        [SerializeField]
+        private float projectileSpeed = 10f;
+
+        [SerializeField]
+        private float projectileLifetime = 2f;
+
+        [SerializeField]
+        private int projectileCount = 3;
+
+        [SerializeField]
+        private float spreadAngle = 15f;
 
         private float nextFireTime;
-        private System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<GameObject, float>> activeProjectiles = 
-            new System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<GameObject, float>>();
+        private System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<
+            GameObject,
+            float
+        >> activeProjectiles =
+            new System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<
+                GameObject,
+                float
+            >>();
 
         void Update()
         {
@@ -94,8 +109,12 @@ namespace PoolMaster.Examples
                     }
 
                     // Track despawn time (no coroutines = no leaks!)
-                    activeProjectiles.Add(new System.Collections.Generic.KeyValuePair<GameObject, float>(
-                        projectile, Time.time + projectileLifetime));
+                    activeProjectiles.Add(
+                        new System.Collections.Generic.KeyValuePair<GameObject, float>(
+                            projectile,
+                            Time.time + projectileLifetime
+                        )
+                    );
                 }
             }
         }
@@ -103,7 +122,7 @@ namespace PoolMaster.Examples
         void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.red;
-            
+
             // Draw fire direction
             for (int i = 0; i < projectileCount; i++)
             {
@@ -112,7 +131,7 @@ namespace PoolMaster.Examples
                 {
                     angle = Mathf.Lerp(-spreadAngle, spreadAngle, i / (float)(projectileCount - 1));
                 }
-                
+
                 var direction = Quaternion.Euler(0, angle, 0) * transform.forward;
                 Gizmos.DrawRay(transform.position, direction * 2f);
             }

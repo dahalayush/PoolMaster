@@ -5,8 +5,8 @@
 // Licensed under MIT License (see LICENSE file for details)
 // ============================================================================
 
-using NUnit.Framework;
 using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace PoolMaster.Tests
 {
@@ -35,7 +35,7 @@ namespace PoolMaster.Tests
         public void GetList_ReturnsEmptyList()
         {
             var list = CollectionPool.GetList<int>();
-            
+
             Assert.IsNotNull(list);
             Assert.AreEqual(0, list.Count);
         }
@@ -47,9 +47,9 @@ namespace PoolMaster.Tests
             list.Add(1);
             list.Add(2);
             list.Add(3);
-            
+
             CollectionPool.Return(list);
-            
+
             // Get it back - should be cleared
             var reused = CollectionPool.GetList<int>();
             Assert.AreEqual(0, reused.Count);
@@ -60,11 +60,11 @@ namespace PoolMaster.Tests
         {
             var list1 = CollectionPool.GetList<int>();
             var reference = list1;
-            
+
             CollectionPool.Return(list1);
-            
+
             var list2 = CollectionPool.GetList<int>();
-            
+
             // Should be the same instance (reused)
             Assert.AreSame(reference, list2);
         }
@@ -75,9 +75,9 @@ namespace PoolMaster.Tests
             var intList = CollectionPool.GetList<int>();
             intList.Add(42);
             CollectionPool.Return(intList);
-            
+
             var stringList = CollectionPool.GetList<string>();
-            
+
             // Should be different type, not mixed
             Assert.AreEqual(0, stringList.Count);
             Assert.IsInstanceOf<List<string>>(stringList);
@@ -91,7 +91,7 @@ namespace PoolMaster.Tests
         public void GetHashSet_ReturnsEmptySet()
         {
             var set = CollectionPool.GetHashSet<int>();
-            
+
             Assert.IsNotNull(set);
             Assert.AreEqual(0, set.Count);
         }
@@ -102,9 +102,9 @@ namespace PoolMaster.Tests
             var set = CollectionPool.GetHashSet<string>();
             set.Add("foo");
             set.Add("bar");
-            
+
             CollectionPool.Return(set);
-            
+
             var reused = CollectionPool.GetHashSet<string>();
             Assert.AreEqual(0, reused.Count);
         }
@@ -114,11 +114,11 @@ namespace PoolMaster.Tests
         {
             var set1 = CollectionPool.GetHashSet<int>();
             var reference = set1;
-            
+
             CollectionPool.Return(set1);
-            
+
             var set2 = CollectionPool.GetHashSet<int>();
-            
+
             Assert.AreSame(reference, set2);
         }
 
@@ -128,9 +128,9 @@ namespace PoolMaster.Tests
             var intSet = CollectionPool.GetHashSet<int>();
             intSet.Add(123);
             CollectionPool.Return(intSet);
-            
+
             var stringSet = CollectionPool.GetHashSet<string>();
-            
+
             Assert.AreEqual(0, stringSet.Count);
             Assert.IsInstanceOf<HashSet<string>>(stringSet);
         }
@@ -143,7 +143,7 @@ namespace PoolMaster.Tests
         public void GetDictionary_ReturnsEmptyDictionary()
         {
             var dict = CollectionPool.GetDictionary<int, string>();
-            
+
             Assert.IsNotNull(dict);
             Assert.AreEqual(0, dict.Count);
         }
@@ -154,9 +154,9 @@ namespace PoolMaster.Tests
             var dict = CollectionPool.GetDictionary<int, string>();
             dict[1] = "one";
             dict[2] = "two";
-            
+
             CollectionPool.Return(dict);
-            
+
             var reused = CollectionPool.GetDictionary<int, string>();
             Assert.AreEqual(0, reused.Count);
         }
@@ -166,11 +166,11 @@ namespace PoolMaster.Tests
         {
             var dict1 = CollectionPool.GetDictionary<int, string>();
             var reference = dict1;
-            
+
             CollectionPool.Return(dict1);
-            
+
             var dict2 = CollectionPool.GetDictionary<int, string>();
-            
+
             Assert.AreSame(reference, dict2);
         }
 
@@ -180,9 +180,9 @@ namespace PoolMaster.Tests
             var intStringDict = CollectionPool.GetDictionary<int, string>();
             intStringDict[1] = "test";
             CollectionPool.Return(intStringDict);
-            
+
             var stringIntDict = CollectionPool.GetDictionary<string, int>();
-            
+
             Assert.AreEqual(0, stringIntDict.Count);
             Assert.IsInstanceOf<Dictionary<string, int>>(stringIntDict);
         }
@@ -205,20 +205,18 @@ namespace PoolMaster.Tests
             var initialCount = CollectionPool.GetTotalPooledCount();
             var list = CollectionPool.GetList<int>();
             CollectionPool.Return(list);
-            
+
             Assert.Greater(CollectionPool.GetTotalPooledCount(), initialCount);
         }
-
-
 
         [Test]
         public void ClearAll_ResetsCount()
         {
             var list = CollectionPool.GetList<int>();
             CollectionPool.Return(list);
-            
+
             CollectionPool.ClearAll();
-            
+
             Assert.AreEqual(0, CollectionPool.GetTotalPooledCount());
         }
 
@@ -239,18 +237,18 @@ namespace PoolMaster.Tests
         {
             // Sanity check: multiple sequential operations don't corrupt state
             var lists = new List<List<int>>();
-            
+
             for (int i = 0; i < 10; i++)
             {
                 lists.Add(CollectionPool.GetList<int>());
             }
-            
+
             foreach (var list in lists)
             {
                 list.Add(42);
                 CollectionPool.Return(list);
             }
-            
+
             // Should have returned all items
             Assert.Greater(CollectionPool.GetTotalPooledCount(), 0);
         }

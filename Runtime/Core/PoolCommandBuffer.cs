@@ -21,11 +21,7 @@ namespace PoolMaster
         public readonly Quaternion rotation;
         public readonly Transform parent;
 
-        public SpawnCommand(
-            Vector3 position,
-            Quaternion rotation,
-            Transform parent = null
-        )
+        public SpawnCommand(Vector3 position, Quaternion rotation, Transform parent = null)
         {
             this.position = position;
             this.rotation = rotation;
@@ -35,7 +31,7 @@ namespace PoolMaster
 
     /// <summary>
     /// Represents a deferred batch spawn command for multiple pooled objects.
-    /// 
+    ///
     /// CRITICAL: The position and rotation arrays are stored by reference for performance.
     /// DO NOT modify these arrays after passing them to EnqueueSpawnBatch.
     /// If you need to reuse/modify the arrays, either:
@@ -64,7 +60,7 @@ namespace PoolMaster
     /// <summary>
     /// Thread-safe command buffer for deferred pooling operations.
     /// Enables queueing spawn/despawn commands from background threads for execution on the main thread.
-    /// 
+    ///
     /// Thread-Safety:
     /// - EnqueueSpawn(), EnqueueSpawnBatch(), EnqueueReturn(): Safe to call from any thread
     /// - FlushTo(): Must ONLY be called from main thread (Unity operations are not thread-safe)
@@ -108,23 +104,19 @@ namespace PoolMaster
         /// <summary>
         /// Enqueues a spawn command for execution on the main thread.
         /// </summary>
-        public void EnqueueSpawn(
-            Vector3 position,
-            Quaternion rotation,
-            Transform parent = null
-        )
+        public void EnqueueSpawn(Vector3 position, Quaternion rotation, Transform parent = null)
         {
             spawnQueue.Enqueue(new SpawnCommand(position, rotation, parent));
         }
 
         /// <summary>
         /// Enqueues a batch spawn command for execution on the main thread.
-        /// 
+        ///
         /// CRITICAL RELIABILITY WARNING:
         /// Arrays are stored by REFERENCE for performance. DO NOT modify the position or rotation
         /// arrays after calling this method. If the arrays are mutated before FlushTo() is called,
         /// spawned objects will have corrupted positions/rotations.
-        /// 
+        ///
         /// If you need to reuse arrays:
         /// - Use EnqueueSpawnBatchSafe() which copies arrays (safer but allocates)
         /// - Or manually clone: EnqueueSpawnBatch((Vector3[])positions.Clone(), ...)
@@ -138,16 +130,14 @@ namespace PoolMaster
         {
             if (positions == null || positions.Length == 0)
                 return;
-            spawnBatchQueue.Enqueue(
-                new SpawnBatchCommand(positions, rotations, parent)
-            );
+            spawnBatchQueue.Enqueue(new SpawnBatchCommand(positions, rotations, parent));
         }
 
         /// <summary>
         /// Enqueues a batch spawn command with SAFE array copies.
         /// This variant clones the position and rotation arrays to prevent mutation issues.
         /// Use this if you plan to reuse/modify the source arrays after enqueueing.
-        /// 
+        ///
         /// Performance: Allocates new arrays (2 allocations). For hot paths where arrays
         /// are guaranteed not to be modified, use the faster EnqueueSpawnBatch().
         /// </summary>
@@ -164,9 +154,7 @@ namespace PoolMaster
             Vector3[] positionsCopy = (Vector3[])positions.Clone();
             Quaternion[] rotationsCopy = rotations != null ? (Quaternion[])rotations.Clone() : null;
 
-            spawnBatchQueue.Enqueue(
-                new SpawnBatchCommand(positionsCopy, rotationsCopy, parent)
-            );
+            spawnBatchQueue.Enqueue(new SpawnBatchCommand(positionsCopy, rotationsCopy, parent));
         }
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace PoolMaster
     /// Generic pool implementation for managing GameObjects with IPoolable components.
     /// Operates entirely on the main thread with automatic instantiation, component caching,
     /// integrated diagnostics, event notifications, and compile-time logging.
-    /// 
+    ///
     /// Thread-Safety: This class is NOT thread-safe. All methods must be called from Unity's main thread.
     /// For background thread operations, use PoolCommandBuffer to enqueue commands for main-thread execution.
     /// </summary>
@@ -260,7 +260,11 @@ namespace PoolMaster
             }
 
             // Check if this object is actually spawned from this pool using marker
-            if (!instance.TryGetComponent(out PooledMarker marker) || !marker.IsSpawnedFromPool || marker.ParentPool != this)
+            if (
+                !instance.TryGetComponent(out PooledMarker marker)
+                || !marker.IsSpawnedFromPool
+                || marker.ParentPool != this
+            )
             {
                 PoolLog.Warn(
                     $"Pool '{poolId}': Attempted to despawn object '{instance.name}' that is not from this pool"
@@ -364,11 +368,14 @@ namespace PoolMaster
                 {
                     // Call OnDespawned() to properly reset poolable state before deactivating
                     // Use cached component from marker
-                    if (instance.TryGetComponent(out PooledMarker marker) && marker.CachedPoolableComponent is T poolable)
+                    if (
+                        instance.TryGetComponent(out PooledMarker marker)
+                        && marker.CachedPoolableComponent is T poolable
+                    )
                     {
                         poolable.OnDespawned();
                     }
-                    
+
                     instance.SetActive(false);
                     inactivePool.Push(instance);
                 }
@@ -457,7 +464,21 @@ namespace PoolMaster
                 {
                     PoolLog.Debug($"Pool '{poolId}': Skipped null object during ShrinkInactive");
                     continue; // Skip null without throwing
-                }\n\n                // Clean up component cache\n                if (componentCache.ContainsKey(obj))\n                {\n                    componentCache.Remove(obj);\n                }\n\n                // Destroy the GameObject\n#if UNITY_EDITOR\n                UnityEngine.Object.DestroyImmediate(obj);\n#else\n                UnityEngine.Object.Destroy(obj);\n#endif\n            }
+                }
+
+                // Clean up component cache
+                if (componentCache.ContainsKey(obj))
+                {
+                    componentCache.Remove(obj);
+                }
+
+                // Destroy the GameObject
+#if UNITY_EDITOR
+                UnityEngine.Object.DestroyImmediate(obj);
+#else
+                UnityEngine.Object.Destroy(obj);
+#endif
+            }
 
             // Update metrics
             for (int j = 0; j < toRemove; j++)
@@ -552,7 +573,7 @@ namespace PoolMaster
                 {
                     break; // Found valid instance
                 }
-                
+
                 // Null found, log and continue popping
                 PoolLog.Warn($"Pool '{poolId}': Found null object in inactive pool, skipping");
             }
@@ -590,7 +611,10 @@ namespace PoolMaster
             }
 
             // Get cached component from marker
-            if (!instance.TryGetComponent(out PooledMarker instanceMarker) || instanceMarker.CachedPoolableComponent == null)
+            if (
+                !instance.TryGetComponent(out PooledMarker instanceMarker)
+                || instanceMarker.CachedPoolableComponent == null
+            )
             {
                 PoolLog.Error(
                     $"Pool '{poolId}': No marker or cached component for object '{instance.name}' during spawn"
@@ -644,7 +668,7 @@ namespace PoolMaster
             catch (Exception e)
             {
                 PoolLog.Error($"Pool '{poolId}': Error during spawn at {position}: {e}");
-                
+
                 // Cleanup failed spawn to prevent orphaned active objects
                 // Clear marker flag if it was set
                 if (instance != null && instance.TryGetComponent(out PooledMarker marker))

@@ -107,14 +107,16 @@ namespace PoolMaster
         /// Clamped to [0, 1] range. Returns 0 if TotalCreated exceeds TotalSpawned (invalid data).
         /// </summary>
         public float ReuseEfficiency =>
-            TotalSpawned > 0 ? Mathf.Max(0f, (TotalSpawned - TotalCreated) / (float)TotalSpawned) : 0f;
+            TotalSpawned > 0
+                ? Mathf.Max(0f, (TotalSpawned - TotalCreated) / (float)TotalSpawned)
+                : 0f;
 
         /// <summary>
         /// Average time between pool expansions in seconds. Returns 0 if no expansions or insufficient time elapsed.
         /// </summary>
         public float AverageExpansionInterval =>
-            ExpansionCount > 0 && Time.time > CreationTime 
-                ? (Time.time - CreationTime) / ExpansionCount 
+            ExpansionCount > 0 && Time.time > CreationTime
+                ? (Time.time - CreationTime) / ExpansionCount
                 : 0f;
 
         /// <summary>

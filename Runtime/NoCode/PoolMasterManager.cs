@@ -5,8 +5,8 @@
 // Licensed under MIT License (see LICENSE file for details)
 // ============================================================================
 
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace PoolMaster.NoCode
 {
@@ -19,12 +19,16 @@ namespace PoolMaster.NoCode
     public class PoolMasterManager : MonoBehaviour
     {
         [Header("Setup")]
-        [Tooltip("List of pools to create when the scene starts. Add pools here to pre-configure them.")]
+        [Tooltip(
+            "List of pools to create when the scene starts. Add pools here to pre-configure them."
+        )]
         [SerializeField]
         private List<PoolDefinition> pools = new List<PoolDefinition>();
 
         [Header("Performance")]
-        [Tooltip("Create all pooled objects immediately when the scene starts (recommended for better performance).")]
+        [Tooltip(
+            "Create all pooled objects immediately when the scene starts (recommended for better performance)."
+        )]
         [SerializeField]
         private bool prewarmOnStart = true;
 
@@ -37,7 +41,8 @@ namespace PoolMaster.NoCode
         [SerializeField]
         private bool showDebugInfo = false;
 
-        private Dictionary<GameObject, PoolDefinition> poolLookup = new Dictionary<GameObject, PoolDefinition>();
+        private Dictionary<GameObject, PoolDefinition> poolLookup =
+            new Dictionary<GameObject, PoolDefinition>();
         private static PoolMasterManager instance;
 
         /// <summary>
@@ -65,7 +70,9 @@ namespace PoolMaster.NoCode
             if (instance != null && instance != this)
             {
                 if (showWarnings)
-                    Debug.LogWarning("[PoolMaster] Multiple PoolMaster Managers detected. Only one should exist.");
+                    Debug.LogWarning(
+                        "[PoolMaster] Multiple PoolMaster Managers detected. Only one should exist."
+                    );
                 Destroy(gameObject);
                 return;
             }
@@ -121,7 +128,9 @@ namespace PoolMaster.NoCode
 
             if (showWarnings)
             {
-                Debug.LogWarning($"[PoolMaster] No pool found for prefab '{prefab.name}'. Add it to the Pools list in PoolMaster Manager.");
+                Debug.LogWarning(
+                    $"[PoolMaster] No pool found for prefab '{prefab.name}'. Add it to the Pools list in PoolMaster Manager."
+                );
             }
 
             return null;
@@ -132,7 +141,8 @@ namespace PoolMaster.NoCode
         /// </summary>
         public void ReturnToPool(GameObject instance)
         {
-            if (instance == null) return;
+            if (instance == null)
+                return;
 
             // Find which pool owns this object
             foreach (var pool in pools)

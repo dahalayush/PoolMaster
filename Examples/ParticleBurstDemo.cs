@@ -5,8 +5,8 @@
 // Licensed under MIT License (see LICENSE file for details)
 // ============================================================================
 
-using UnityEngine;
 using PoolMaster;
+using UnityEngine;
 
 namespace PoolMaster.Examples
 {
@@ -17,10 +17,17 @@ namespace PoolMaster.Examples
     public class ParticleBurstDemo : MonoBehaviour
     {
         [Header("Configuration")]
-        [SerializeField] private float burstInterval = 3f;
-        [SerializeField] private int particlesPerBurst = 50;
-        [SerializeField] private float burstForce = 5f;
-        [SerializeField] private float particleLifetime = 2f;
+        [SerializeField]
+        private float burstInterval = 3f;
+
+        [SerializeField]
+        private int particlesPerBurst = 50;
+
+        [SerializeField]
+        private float burstForce = 5f;
+
+        [SerializeField]
+        private float particleLifetime = 2f;
 
         private float nextBurstTime;
 
@@ -83,7 +90,7 @@ namespace PoolMaster.Examples
         {
             Gizmos.color = Color.white;
             Gizmos.DrawWireSphere(transform.position, 0.5f);
-            
+
             // Draw burst indicator
             if (Time.time >= nextBurstTime - 0.5f)
             {

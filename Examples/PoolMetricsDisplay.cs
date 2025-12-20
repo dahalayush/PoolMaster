@@ -5,9 +5,9 @@
 // Licensed under MIT License (see LICENSE file for details)
 // ============================================================================
 
+using PoolMaster;
 using UnityEngine;
 using UnityEngine.UI;
-using PoolMaster;
 
 namespace PoolMaster.Examples
 {
@@ -18,8 +18,11 @@ namespace PoolMaster.Examples
     public class PoolMetricsDisplay : MonoBehaviour
     {
         [Header("UI Configuration")]
-        [SerializeField] private Text metricsText;
-        [SerializeField] private float updateInterval = 0.1f;
+        [SerializeField]
+        private Text metricsText;
+
+        [SerializeField]
+        private float updateInterval = 0.1f;
 
         private float lastUpdateTime;
 
@@ -43,7 +46,7 @@ namespace PoolMaster.Examples
             // Create background panel
             var panel = new GameObject("MetricsPanel");
             panel.transform.SetParent(transform, false);
-            
+
             var rectTransform = panel.AddComponent<RectTransform>();
             rectTransform.anchorMin = new Vector2(0, 1);
             rectTransform.anchorMax = new Vector2(0, 1);
@@ -57,7 +60,7 @@ namespace PoolMaster.Examples
             // Create text
             var textObj = new GameObject("MetricsText");
             textObj.transform.SetParent(panel.transform, false);
-            
+
             var textRect = textObj.AddComponent<RectTransform>();
             textRect.anchorMin = Vector2.zero;
             textRect.anchorMax = Vector2.one;
@@ -83,7 +86,9 @@ namespace PoolMaster.Examples
             sb.AppendLine("<b>=== PoolMaster Metrics ===</b>");
             sb.AppendLine($"Active Pools: {snapshot.PoolBreakdown.Count}");
             sb.AppendLine($"Total Objects: {snapshot.TotalObjects}");
-            sb.AppendLine($"Active: {snapshot.TotalActiveObjects} | Inactive: {snapshot.TotalInactiveObjects}");
+            sb.AppendLine(
+                $"Active: {snapshot.TotalActiveObjects} | Inactive: {snapshot.TotalInactiveObjects}"
+            );
             sb.AppendLine($"Global Utilization: {snapshot.GlobalUtilization:F1}%");
             sb.AppendLine();
 

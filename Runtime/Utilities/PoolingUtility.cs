@@ -242,7 +242,7 @@ namespace PoolMaster
         }
 
         /// <summary>
-        /// Clears the cached pool requests dictionary. 
+        /// Clears the cached pool requests dictionary.
         /// Call during scene transitions or when unloading dynamically generated prefabs to prevent memory leaks.
         /// Recommended to call in SceneManager.sceneUnloaded or on major scene changes.
         /// </summary>

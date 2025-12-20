@@ -5,8 +5,8 @@
 // Licensed under MIT License (see LICENSE file for details)
 // ============================================================================
 
-using UnityEngine;
 using PoolMaster;
+using UnityEngine;
 
 namespace PoolMaster.Examples
 {
@@ -17,10 +17,17 @@ namespace PoolMaster.Examples
     public class BatchSpawningDemo : MonoBehaviour
     {
         [Header("Configuration")]
-        [SerializeField] private float spawnInterval = 2f;
-        [SerializeField] private int objectsPerBatch = 10;
-        [SerializeField] private float spawnRadius = 2f;
-        [SerializeField] private float despawnDelay = 4f;
+        [SerializeField]
+        private float spawnInterval = 2f;
+
+        [SerializeField]
+        private int objectsPerBatch = 10;
+
+        [SerializeField]
+        private float spawnRadius = 2f;
+
+        [SerializeField]
+        private float despawnDelay = 4f;
 
         private float nextSpawnTime;
         private PoolCommandBuffer commandBuffer;
@@ -51,11 +58,13 @@ namespace PoolMaster.Examples
             for (int i = 0; i < objectsPerBatch; i++)
             {
                 var angle = (i / (float)objectsPerBatch) * Mathf.PI * 2f;
-                positions[i] = transform.position + new Vector3(
-                    Mathf.Cos(angle) * spawnRadius,
-                    1f,
-                    Mathf.Sin(angle) * spawnRadius
-                );
+                positions[i] =
+                    transform.position
+                    + new Vector3(
+                        Mathf.Cos(angle) * spawnRadius,
+                        1f,
+                        Mathf.Sin(angle) * spawnRadius
+                    );
                 rotations[i] = Quaternion.identity;
             }
 
@@ -68,7 +77,7 @@ namespace PoolMaster.Examples
             if (pool != null)
             {
                 int spawned = commandBuffer.FlushTo((IPoolControl)pool);
-                
+
                 // Auto-despawn batch after delay
                 StartCoroutine(DespawnBatchAfterDelay(despawnDelay));
             }
@@ -82,8 +91,11 @@ namespace PoolMaster.Examples
             var pooledObjects = FindObjectsByType<SimplePoolableObject>(FindObjectsSortMode.None);
             foreach (var obj in pooledObjects)
             {
-                if (obj.gameObject.activeInHierarchy && 
-                    Vector3.Distance(obj.transform.position, transform.position) < spawnRadius * 2f)
+                if (
+                    obj.gameObject.activeInHierarchy
+                    && Vector3.Distance(obj.transform.position, transform.position)
+                        < spawnRadius * 2f
+                )
                 {
                     PoolingManager.Instance.Despawn(obj.gameObject);
                 }
@@ -94,16 +106,18 @@ namespace PoolMaster.Examples
         {
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(transform.position, spawnRadius);
-            
+
             // Draw batch spawn positions
             for (int i = 0; i < objectsPerBatch; i++)
             {
                 var angle = (i / (float)objectsPerBatch) * Mathf.PI * 2f;
-                var pos = transform.position + new Vector3(
-                    Mathf.Cos(angle) * spawnRadius,
-                    1f,
-                    Mathf.Sin(angle) * spawnRadius
-                );
+                var pos =
+                    transform.position
+                    + new Vector3(
+                        Mathf.Cos(angle) * spawnRadius,
+                        1f,
+                        Mathf.Sin(angle) * spawnRadius
+                    );
                 Gizmos.DrawWireSphere(pos, 0.2f);
             }
         }

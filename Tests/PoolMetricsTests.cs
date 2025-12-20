@@ -19,7 +19,7 @@ namespace PoolMaster.Tests
         public void ReuseEfficiency_ZeroSpawns_ReturnsZero()
         {
             var metrics = CreateMetrics(totalSpawned: 0, totalCreated: 0);
-            
+
             Assert.AreEqual(0f, metrics.ReuseEfficiency, 0.001f);
         }
 
@@ -27,7 +27,7 @@ namespace PoolMaster.Tests
         public void ReuseEfficiency_AllReused_ReturnsOne()
         {
             var metrics = CreateMetrics(totalSpawned: 100, totalCreated: 10);
-            
+
             // 90 reused out of 100 spawns = 90% = 0.9
             Assert.AreEqual(0.9f, metrics.ReuseEfficiency, 0.001f);
         }
@@ -36,7 +36,7 @@ namespace PoolMaster.Tests
         public void ReuseEfficiency_NoneReused_ReturnsZero()
         {
             var metrics = CreateMetrics(totalSpawned: 50, totalCreated: 50);
-            
+
             // Every spawn created a new object = 0% reuse
             Assert.AreEqual(0f, metrics.ReuseEfficiency, 0.001f);
         }
@@ -46,7 +46,7 @@ namespace PoolMaster.Tests
         {
             // Edge case: bad data where created > spawned (should clamp to 0)
             var metrics = CreateMetrics(totalSpawned: 50, totalCreated: 100);
-            
+
             // Cannot have negative reuse
             Assert.GreaterOrEqual(metrics.ReuseEfficiency, 0f);
         }
@@ -55,7 +55,7 @@ namespace PoolMaster.Tests
         public void CurrentActive_CalculatesCorrectly()
         {
             var metrics = CreateMetrics(totalSpawned: 100, totalDespawned: 60);
-            
+
             Assert.AreEqual(40, metrics.CurrentActive);
         }
 
@@ -64,7 +64,7 @@ namespace PoolMaster.Tests
         {
             // With bad data (more despawns than spawns), returns mathematically correct negative
             var metrics = CreateMetrics(totalSpawned: 10, totalDespawned: 20);
-            
+
             Assert.AreEqual(-10, metrics.CurrentActive);
         }
 
@@ -72,7 +72,7 @@ namespace PoolMaster.Tests
         public void CreatesPerSpawn_AllCreated_ReturnsOne()
         {
             var metrics = CreateMetrics(totalSpawned: 50, totalCreated: 50);
-            
+
             Assert.AreEqual(1f, metrics.CreatesPerSpawn, 0.001f);
         }
 
@@ -80,7 +80,7 @@ namespace PoolMaster.Tests
         public void CreatesPerSpawn_HalfCreated_ReturnsHalf()
         {
             var metrics = CreateMetrics(totalSpawned: 100, totalCreated: 50);
-            
+
             Assert.AreEqual(0.5f, metrics.CreatesPerSpawn, 0.001f);
         }
 
@@ -89,7 +89,7 @@ namespace PoolMaster.Tests
         {
             // Edge case: division by zero guard
             var metrics = CreateMetrics(totalSpawned: 0, totalCreated: 10);
-            
+
             Assert.AreEqual(0f, metrics.CreatesPerSpawn);
         }
 
@@ -98,7 +98,7 @@ namespace PoolMaster.Tests
         {
             // No expansions, should return 0
             var metrics = CreateMetrics(expansionCount: 0, creationTime: 50f, lastExpandTime: 100f);
-            
+
             Assert.AreEqual(0f, metrics.AverageExpansionInterval);
         }
 
@@ -106,8 +106,12 @@ namespace PoolMaster.Tests
         public void AverageExpansionInterval_TimeEqualsCreation_ReturnsZero()
         {
             // Guard against NaN when lastExpandTime == creationTime
-            var metrics = CreateMetrics(expansionCount: 5, creationTime: 100f, lastExpandTime: 100f);
-            
+            var metrics = CreateMetrics(
+                expansionCount: 5,
+                creationTime: 100f,
+                lastExpandTime: 100f
+            );
+
             Assert.AreEqual(0f, metrics.AverageExpansionInterval);
         }
 
@@ -115,8 +119,12 @@ namespace PoolMaster.Tests
         public void SpawnsPerSecond_ZeroTime_ReturnsZero()
         {
             // When lastExpandTime == creationTime, elapsed time is 0
-            var metrics = CreateMetrics(totalSpawned: 100, creationTime: 100f, lastExpandTime: 100f);
-            
+            var metrics = CreateMetrics(
+                totalSpawned: 100,
+                creationTime: 100f,
+                lastExpandTime: 100f
+            );
+
             Assert.AreEqual(0f, metrics.SpawnsPerSecond);
         }
 
@@ -125,9 +133,9 @@ namespace PoolMaster.Tests
         {
             var metrics1 = CreateMetrics(totalSpawned: 50, totalDespawned: 20, totalCreated: 30);
             var metrics2 = CreateMetrics(totalSpawned: 30, totalDespawned: 15, totalCreated: 20);
-            
+
             var merged = PoolMetrics.Merge(metrics1, metrics2);
-            
+
             Assert.AreEqual(80, merged.TotalSpawned);
             Assert.AreEqual(35, merged.TotalDespawned);
             Assert.AreEqual(50, merged.TotalCreated);
@@ -139,9 +147,9 @@ namespace PoolMaster.Tests
         {
             var metrics1 = CreateMetrics(creationTime: 10f);
             var metrics2 = CreateMetrics(creationTime: 5f);
-            
+
             var merged = PoolMetrics.Merge(metrics1, metrics2);
-            
+
             // Should use earlier creation time
             Assert.AreEqual(5f, merged.CreationTime);
         }
@@ -151,9 +159,9 @@ namespace PoolMaster.Tests
         {
             var metrics1 = CreateMetrics(lastExpandTime: 100f);
             var metrics2 = CreateMetrics(lastExpandTime: 150f);
-            
+
             var merged = PoolMetrics.Merge(metrics1, metrics2);
-            
+
             Assert.AreEqual(150f, merged.LastExpandTime);
         }
 
@@ -168,11 +176,20 @@ namespace PoolMaster.Tests
             int cullCount = 0,
             float lastExpandTime = 0f,
             float lastCullTime = 0f,
-            float creationTime = 0f)
+            float creationTime = 0f
+        )
         {
             return new PoolMetrics(
-                totalSpawned, totalDespawned, totalCreated, totalDestroyed,
-                expansionCount, cullCount, lastExpandTime, lastCullTime, creationTime);
+                totalSpawned,
+                totalDespawned,
+                totalCreated,
+                totalDestroyed,
+                expansionCount,
+                cullCount,
+                lastExpandTime,
+                lastCullTime,
+                creationTime
+            );
         }
     }
 }

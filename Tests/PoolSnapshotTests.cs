@@ -5,8 +5,8 @@
 // Licensed under MIT License (see LICENSE file for details)
 // ============================================================================
 
-using NUnit.Framework;
 using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace PoolMaster.Tests
 {
@@ -24,7 +24,7 @@ namespace PoolMaster.Tests
                 totalInactive: 30,
                 poolBreakdown: new Dictionary<string, PoolMetrics>()
             );
-            
+
             Assert.AreEqual(80, snapshot.TotalObjects);
         }
 
@@ -37,7 +37,7 @@ namespace PoolMaster.Tests
                 totalInactive: 60,
                 poolBreakdown: new Dictionary<string, PoolMetrics>()
             );
-            
+
             // 40 active / 100 total = 40%
             Assert.AreEqual(40f, snapshot.GlobalUtilization, 0.001f);
         }
@@ -51,7 +51,7 @@ namespace PoolMaster.Tests
                 totalInactive: 0,
                 poolBreakdown: new Dictionary<string, PoolMetrics>()
             );
-            
+
             Assert.AreEqual(0f, snapshot.GlobalUtilization);
         }
 
@@ -64,7 +64,7 @@ namespace PoolMaster.Tests
                 totalInactive: 0,
                 poolBreakdown: new Dictionary<string, PoolMetrics>()
             );
-            
+
             Assert.AreEqual(100f, snapshot.GlobalUtilization, 0.001f);
         }
 
@@ -72,9 +72,9 @@ namespace PoolMaster.Tests
         public void Single_CreatesSnapshotWithOnePool()
         {
             var metrics = CreateMetrics(totalSpawned: 50, totalDespawned: 10);
-            
+
             var snapshot = PoolSnapshot.Single("TestPool", metrics, inactiveCount: 20);
-            
+
             Assert.AreEqual(1, snapshot.TotalPools);
             Assert.AreEqual(40, snapshot.TotalActiveObjects); // 50 - 10
             Assert.AreEqual(20, snapshot.TotalInactiveObjects);
@@ -91,7 +91,7 @@ namespace PoolMaster.Tests
                 totalInactive: 0,
                 poolBreakdown: new Dictionary<string, PoolMetrics>()
             );
-            
+
             // Should be roughly current time (±15s for slow CI)
             var now = System.DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             Assert.That(snapshot.UtcCapturedAt, Is.InRange(now - 15, now + 15));
@@ -106,7 +106,7 @@ namespace PoolMaster.Tests
                 totalInactive: 0,
                 poolBreakdown: null // Pass null
             );
-            
+
             Assert.IsNotNull(snapshot.PoolBreakdown);
             Assert.AreEqual(0, snapshot.PoolBreakdown.Count);
         }
@@ -120,9 +120,9 @@ namespace PoolMaster.Tests
                 totalInactive: 50,
                 poolBreakdown: new Dictionary<string, PoolMetrics>()
             );
-            
+
             var str = snapshot.ToString();
-            
+
             Assert.That(str, Does.Contain("3 pools"));
             Assert.That(str, Does.Contain("Active=100"));
             Assert.That(str, Does.Contain("Inactive=50"));
@@ -133,10 +133,20 @@ namespace PoolMaster.Tests
         private PoolMetrics CreateMetrics(
             long totalSpawned = 0,
             long totalDespawned = 0,
-            long totalCreated = 0)
+            long totalCreated = 0
+        )
         {
             return new PoolMetrics(
-                totalSpawned, totalDespawned, totalCreated, 0L, 0, 0, 0f, 0f, 0f);
+                totalSpawned,
+                totalDespawned,
+                totalCreated,
+                0L,
+                0,
+                0,
+                0f,
+                0f,
+                0f
+            );
         }
     }
 }

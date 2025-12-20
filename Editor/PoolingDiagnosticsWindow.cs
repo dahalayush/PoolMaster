@@ -23,22 +23,37 @@ namespace PoolMaster.Editor
         private float refreshInterval = 0.5f;
         private double lastRefreshTime;
         private PoolSnapshot lastSnapshot;
-        
+
         // Search and filtering
         private string searchFilter = "";
         private bool showActiveOnly = false;
         private int sortMode = 0; // 0=Name, 1=Active Desc, 2=Utilization Desc, 3=Expansions Desc
-        private readonly string[] sortOptions = { "Name", "Active (High)", "Utilization (High)", "Expansions (High)" };
-        private List<KeyValuePair<string, PoolMetrics>> poolListCache = new List<KeyValuePair<string, PoolMetrics>>();
+        private readonly string[] sortOptions =
+        {
+            "Name",
+            "Active (High)",
+            "Utilization (High)",
+            "Expansions (High)",
+        };
+        private List<KeyValuePair<string, PoolMetrics>> poolListCache =
+            new List<KeyValuePair<string, PoolMetrics>>();
 
         void OnGUI()
         {
             // Header controls
             EditorGUILayout.BeginHorizontal();
-            autoRefresh = EditorGUILayout.Toggle(new GUIContent("Auto Refresh", "Automatically refresh pool data"), autoRefresh);
+            autoRefresh = EditorGUILayout.Toggle(
+                new GUIContent("Auto Refresh", "Automatically refresh pool data"),
+                autoRefresh
+            );
             if (autoRefresh)
             {
-                refreshInterval = EditorGUILayout.Slider(new GUIContent("Interval", "Refresh interval in seconds"), refreshInterval, 0.1f, 2f);
+                refreshInterval = EditorGUILayout.Slider(
+                    new GUIContent("Interval", "Refresh interval in seconds"),
+                    refreshInterval,
+                    0.1f,
+                    2f
+                );
             }
             if (GUILayout.Button("Refresh Now", GUILayout.Width(100)))
             {
@@ -48,10 +63,17 @@ namespace PoolMaster.Editor
 
             // Search and filter controls
             EditorGUILayout.BeginHorizontal();
-            searchFilter = EditorGUILayout.TextField(new GUIContent("Search", "Filter pools by name"), searchFilter);
-            showActiveOnly = EditorGUILayout.Toggle(new GUIContent("Active Only", "Show only pools with active objects"), showActiveOnly, GUILayout.Width(100));
+            searchFilter = EditorGUILayout.TextField(
+                new GUIContent("Search", "Filter pools by name"),
+                searchFilter
+            );
+            showActiveOnly = EditorGUILayout.Toggle(
+                new GUIContent("Active Only", "Show only pools with active objects"),
+                showActiveOnly,
+                GUILayout.Width(100)
+            );
             EditorGUILayout.EndHorizontal();
-            
+
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Sort By:", GUILayout.Width(60));
             sortMode = EditorGUILayout.Popup(sortMode, sortOptions, GUILayout.Width(150));
@@ -61,7 +83,6 @@ namespace PoolMaster.Editor
 
             if (Application.isPlaying && PoolingManager.Instance != null)
             {
-
                 if (lastSnapshot.TotalPools > 0)
                 {
                     DrawPoolingSummary();
@@ -111,14 +132,25 @@ namespace PoolMaster.Editor
 
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField(
-                new GUIContent($"Total Objects: {lastSnapshot.TotalObjects}", "Total pooled instances across all pools"),
+                new GUIContent(
+                    $"Total Objects: {lastSnapshot.TotalObjects}",
+                    "Total pooled instances across all pools"
+                ),
                 GUILayout.Width(140)
             );
             EditorGUILayout.LabelField(
-                new GUIContent($"Utilization: {lastSnapshot.GlobalUtilization:F1}%", "Percentage of objects currently active"),
+                new GUIContent(
+                    $"Utilization: {lastSnapshot.GlobalUtilization:F1}%",
+                    "Percentage of objects currently active"
+                ),
                 GUILayout.Width(140)
             );
-            if (GUILayout.Button(new GUIContent("Unity Profiler", "Open Profiler for accurate memory analysis"), GUILayout.Width(120)))
+            if (
+                GUILayout.Button(
+                    new GUIContent("Unity Profiler", "Open Profiler for accurate memory analysis"),
+                    GUILayout.Width(120)
+                )
+            )
             {
                 EditorApplication.ExecuteMenuItem("Window/Analysis/Profiler");
             }
@@ -145,42 +177,65 @@ namespace PoolMaster.Editor
                     if (kv.Key.IndexOf(searchFilter, StringComparison.OrdinalIgnoreCase) < 0)
                         continue;
                 }
-                
+
                 // Active only filter
                 if (showActiveOnly && kv.Value.CurrentActive == 0)
                     continue;
-                
+
                 poolListCache.Add(kv);
             }
-            
+
             // Manual sorting to avoid LINQ allocations (with stable secondary sort by name)
             switch (sortMode)
             {
                 case 1: // Active (High)
-                    poolListCache.Sort((a, b) => {
-                        int result = b.Value.CurrentActive.CompareTo(a.Value.CurrentActive);
-                        return result != 0 ? result : string.Compare(a.Key, b.Key, StringComparison.Ordinal);
-                    });
+                    poolListCache.Sort(
+                        (a, b) =>
+                        {
+                            int result = b.Value.CurrentActive.CompareTo(a.Value.CurrentActive);
+                            return result != 0
+                                ? result
+                                : string.Compare(a.Key, b.Key, StringComparison.Ordinal);
+                        }
+                    );
                     break;
                 case 2: // Utilization (High)
-                    poolListCache.Sort((a, b) => {
-                        float utilA = a.Value.TotalCreated > 0 ? (float)a.Value.CurrentActive / a.Value.TotalCreated : 0;
-                        float utilB = b.Value.TotalCreated > 0 ? (float)b.Value.CurrentActive / b.Value.TotalCreated : 0;
-                        int result = utilB.CompareTo(utilA);
-                        return result != 0 ? result : string.Compare(a.Key, b.Key, StringComparison.Ordinal);
-                    });
+                    poolListCache.Sort(
+                        (a, b) =>
+                        {
+                            float utilA =
+                                a.Value.TotalCreated > 0
+                                    ? (float)a.Value.CurrentActive / a.Value.TotalCreated
+                                    : 0;
+                            float utilB =
+                                b.Value.TotalCreated > 0
+                                    ? (float)b.Value.CurrentActive / b.Value.TotalCreated
+                                    : 0;
+                            int result = utilB.CompareTo(utilA);
+                            return result != 0
+                                ? result
+                                : string.Compare(a.Key, b.Key, StringComparison.Ordinal);
+                        }
+                    );
                     break;
                 case 3: // Expansions (High)
-                    poolListCache.Sort((a, b) => {
-                        int result = b.Value.ExpansionCount.CompareTo(a.Value.ExpansionCount);
-                        return result != 0 ? result : string.Compare(a.Key, b.Key, StringComparison.Ordinal);
-                    });
+                    poolListCache.Sort(
+                        (a, b) =>
+                        {
+                            int result = b.Value.ExpansionCount.CompareTo(a.Value.ExpansionCount);
+                            return result != 0
+                                ? result
+                                : string.Compare(a.Key, b.Key, StringComparison.Ordinal);
+                        }
+                    );
                     break;
                 default: // Name
-                    poolListCache.Sort((a, b) => string.Compare(a.Key, b.Key, StringComparison.Ordinal));
+                    poolListCache.Sort(
+                        (a, b) => string.Compare(a.Key, b.Key, StringComparison.Ordinal)
+                    );
                     break;
             }
-            
+
             if (poolListCache.Count == 0)
             {
                 EditorGUILayout.HelpBox("No pools match the current filter.", MessageType.Info);
@@ -195,18 +250,40 @@ namespace PoolMaster.Editor
 
                 // Pool name header with colored indicator
                 EditorGUILayout.BeginHorizontal();
-                var indicatorColor = kv.Value.CurrentActive > 0 ? "<color=green>●</color>" : "<color=gray>○</color>";
-                EditorGUILayout.LabelField($"{indicatorColor} 🎯 {kv.Key}", new GUIStyle(EditorStyles.boldLabel) { richText = true });
+                var indicatorColor =
+                    kv.Value.CurrentActive > 0 ? "<color=green>●</color>" : "<color=gray>○</color>";
+                EditorGUILayout.LabelField(
+                    $"{indicatorColor} 🎯 {kv.Key}",
+                    new GUIStyle(EditorStyles.boldLabel) { richText = true }
+                );
                 EditorGUILayout.EndHorizontal();
 
                 var m = kv.Value;
 
                 // Core stats with tooltips
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField(new GUIContent($"Active: {m.CurrentActive}", "Currently spawned objects"), GUILayout.Width(80));
-                EditorGUILayout.LabelField(new GUIContent($"Spawned: {m.TotalSpawned}", "Total times objects were spawned"), GUILayout.Width(90));
-                EditorGUILayout.LabelField(new GUIContent($"Created: {m.TotalCreated}", "Total objects instantiated"), GUILayout.Width(80));
-                EditorGUILayout.LabelField(new GUIContent($"Reuse: {m.ReuseEfficiency:P0}", "Percentage of spawns that reused existing objects"), GUILayout.Width(90));
+                EditorGUILayout.LabelField(
+                    new GUIContent($"Active: {m.CurrentActive}", "Currently spawned objects"),
+                    GUILayout.Width(80)
+                );
+                EditorGUILayout.LabelField(
+                    new GUIContent(
+                        $"Spawned: {m.TotalSpawned}",
+                        "Total times objects were spawned"
+                    ),
+                    GUILayout.Width(90)
+                );
+                EditorGUILayout.LabelField(
+                    new GUIContent($"Created: {m.TotalCreated}", "Total objects instantiated"),
+                    GUILayout.Width(80)
+                );
+                EditorGUILayout.LabelField(
+                    new GUIContent(
+                        $"Reuse: {m.ReuseEfficiency:P0}",
+                        "Percentage of spawns that reused existing objects"
+                    ),
+                    GUILayout.Width(90)
+                );
                 EditorGUILayout.EndHorizontal();
 
                 // Performance stats
@@ -240,7 +317,13 @@ namespace PoolMaster.Editor
                         utilization,
                         $"Utilization: {utilization:P0} (Active/Total Created)"
                     );
-                    GUILayout.Label(new GUIContent("ⓘ", "Shows how 'hot' this pool is - higher means more objects are actively in use"), GUILayout.Width(20));
+                    GUILayout.Label(
+                        new GUIContent(
+                            "ⓘ",
+                            "Shows how 'hot' this pool is - higher means more objects are actively in use"
+                        ),
+                        GUILayout.Width(20)
+                    );
                     EditorGUILayout.EndHorizontal();
                 }
 
@@ -260,12 +343,12 @@ namespace PoolMaster.Editor
                 RefreshData();
             }
         }
-        
+
         void OnDisable()
         {
             EditorApplication.update -= OnEditorUpdate;
         }
-        
+
         void OnEditorUpdate()
         {
             // Throttled refresh check outside OnGUI

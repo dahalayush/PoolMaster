@@ -5,9 +5,9 @@
 // Licensed under MIT License (see LICENSE file for details)
 // ============================================================================
 
-using UnityEngine;
-using PoolMaster;
 using System.Collections.Generic;
+using PoolMaster;
+using UnityEngine;
 
 namespace PoolMaster.Examples
 {
@@ -18,8 +18,11 @@ namespace PoolMaster.Examples
     public class CollectionPoolingDemo : MonoBehaviour
     {
         [Header("Configuration")]
-        [SerializeField] private float operationInterval = 0.5f;
-        [SerializeField] private int operationsPerCycle = 100;
+        [SerializeField]
+        private float operationInterval = 0.5f;
+
+        [SerializeField]
+        private int operationsPerCycle = 100;
 
         private float nextOperationTime;
         private int cycleCount;
@@ -129,7 +132,7 @@ namespace PoolMaster.Examples
 
             var rect = new Rect(Screen.width - 420, 10, 400, 200);
             var bgRect = new Rect(rect.x - 10, rect.y - 10, rect.width + 20, rect.height + 20);
-            
+
             GUI.color = new Color(0, 0, 0, 0.7f);
             GUI.DrawTexture(bgRect, Texture2D.whiteTexture);
             GUI.color = Color.white;
