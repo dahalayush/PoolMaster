@@ -2,20 +2,29 @@
 
 **PoolMaster** is a high-performance, production-ready object pooling system for Unity. Designed for both 2D and 3D games, it provides a comprehensive solution for managing GameObject lifecycles efficiently, reducing GC pressure, and maximizing runtime performance.
 
-[![Unity](https://img.shields.io/badge/Unity-2020.3%2B-black)](https://unity.com/)
+[![Unity](https://img.shields.io/badge/Unity-6.0%E2%80%936.4-black)](https://unity.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-## ✨ Features
+## 💎 Features
 
-- 🚀 **Zero-Allocation Pooling** - Minimal GC pressure with compile-time logging and efficient data structures
-- 🎯 **Type-Safe API** - Generic Pool<T> with compile-time safety
-- ⚡ **Batch Operations** - Spawn/despawn multiple objects in a single call
-- 🔄 **Command Buffer System** - Thread-safe enqueueing for multi-core spawning
-- 📊 **Built-in Diagnostics** - Real-time pool metrics and editor window
-- 🎨 **Flexible Configuration** - Fine-grained control over pool behavior
-- 🧩 **Event System** - React to pooling events without tight coupling
-- 📦 **Collection Pooling** - Reduce List<T>, Dictionary<K,V>, HashSet<T> allocations
-- 🔧 **Easy Integration** - Simple IPoolable interface with optional base classes
+- 🖤 Zero-allocation pooling — minimal GC, fast hot paths
+- ⛓️ Type-safe API — generic Pool<T> with safety
+- 💎 Batch ops — spawn/despawn many at once
+- 🖤 Command buffers — thread-safe enqueue, main-thread flush
+- ⛓️ Diagnostics — real-time metrics + editor window
+- 💎 Configurable — precise control over pool behavior
+- 🖤 Events — decoupled, opt-in hooks
+- ⛓️ Collection pooling — reuse lists/dicts/sets
+- 💎 Easy integration — IPoolable + helpers
+
+## 🖤 Compatibility
+
+- Supported Unity: 6.0 – 6.4 (stable)
+- Render Pipelines: Built-in, URP, HDRP
+
+## 🖤 Links
+
+- Add me on Discord: [misty2023](https://discord.com/users/misty2023)
 
 ## 📦 Installation
 

@@ -3,9 +3,11 @@
 **60 seconds. No programming.**
 
 ## What You'll Build
-✅ Auto-spawning objects  
-✅ Auto-returning to pool  
-✅ Zero garbage collection
+💎 Auto-spawning objects  
+🖤 Auto-returning to pool  
+⛓️ Zero garbage collection
+
+Supports Unity 6.0–6.4 (Built-in, URP, HDRP).
 
 ---
 
@@ -66,7 +68,7 @@ Done. Auto-return works.
 
 ---
 
-## ✅ Press Play
+## 🖤 Press Play
 
 Objects spawn → live for 2 sec → return to pool → get reused.  
 **No code. No garbage collection.**
