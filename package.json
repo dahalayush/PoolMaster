@@ -13,7 +13,16 @@
     "gc",
     "allocation-free",
     "spawn",
-    "instantiate"
+    "instantiate",
+    "unity",
+    "unity6",
+    "object-pooling",
+    "pooling-system",
+    "urp",
+    "hdrp",
+    "vfx",
+    "particles",
+    "gameobjects"
   ],
   "author": {
     "name": "Max Thomas Coates",

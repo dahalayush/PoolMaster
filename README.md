@@ -5,6 +5,14 @@
 [![Unity](https://img.shields.io/badge/Unity-6.0%E2%80%936.4-black)](https://unity.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
+---
+
+### ⚡ Getting Started
+
+For the fastest setup, start with the No‑Code Quick Start: [Documentation/NO_CODE_QUICK_START.md](Documentation/NO_CODE_QUICK_START.md)
+
+---
+
 ## 💎 Features
 
 - 🖤 Zero-allocation pooling — minimal GC, fast hot paths
