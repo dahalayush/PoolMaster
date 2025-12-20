@@ -1,0 +1,23 @@
+#!/bin/sh
+# CSharpier pre-commit hook: checks formatting and auto-formats if needed
+
+# Exit on error
+set -e
+
+# Ensure csharpier exists
+command -v csharpier >/dev/null 2>&1 || {
+  echo "csharpier not found in PATH; skipping formatting." >&2
+  exit 0
+}
+
+echo "Running CSharpier check..."
+if ! csharpier check .; then
+  echo "Formatting with CSharpier..."
+  csharpier format .
+  # Stage any formatting changes
+  git add -A
+else
+  echo "CSharpier: already formatted."
+fi
+
+exit 0
