@@ -542,6 +542,8 @@ Created by Max Thomas Coates
 - Verify CSharpier: `csharpier --version` (required for formatting)
 - Format manually if needed: `csharpier format .`
 
+See full dev setup: [DEVELOPING.md](DEVELOPING.md)
+
 ## 🐛 Support
 
 - **Issues**: [GitHub Issues](https://github.com/yourusername/PoolMaster/issues)
