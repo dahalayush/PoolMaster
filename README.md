@@ -308,7 +308,7 @@ Performance comparison vs traditional `Instantiate/Destroy`:
 | 100 objects | ~0.2ms | ~0.05ms | **4x faster** |
 | 500 objects | ~1.0ms | ~0.2ms | **5x faster** |
 
-*Benchmarks run on Unity 2022.3 LTS, Intel i7-12700K, 32GB RAM*
+*Benchmarks run on Unity 6000.0.62f1 LTS, Intel i9-13950HX, 32GB RAM DDR5 5200mhz, RTX 4070 mGPU*
 
 ## 🛰️ Advanced Usage
 
